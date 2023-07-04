@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { debounce } from '../libs/client';
 	import type { PageData } from './$types';
 	import type { SuggestData } from './types';
 
@@ -45,7 +46,7 @@
 	let q = '';
 	let suggest: string[] = [];
 
-	const fetchSuggest = async () => {
+	const fetchSuggest = debounce(async () => {
 		q = q.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');
 		const res = await fetch(`/api/search?q=${q}`);
 		const data = (await res.json()) as SuggestData;
@@ -55,7 +56,7 @@
 			...districts.map((o) => [o.name, o.province.name].join(', ')),
 			...provinces.map((o) => o.name)
 		];
-	};
+	});
 </script>
 
 <div class="flex flex-col w-80 space-y-2 m-auto mt-5">
