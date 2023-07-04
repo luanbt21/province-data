@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model province {
+  id        Int        @id
+  name      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  district  district[]
+  ward      ward[]
+}
+
+model district {
+  id         Int      @id
+  provinceId Int
+  province   province @relation(fields: [provinceId], references: [id])
+  unit       String
+  name       String
+  fullName   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  ward       ward[]
+}
+
+model ward {
+  id         Int      @id
+  provinceId Int
+  province   province @relation(fields: [provinceId], references: [id])
+  districtId Int
+  district   district @relation(fields: [districtId], references: [id])
+  unit       String
+  name       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
